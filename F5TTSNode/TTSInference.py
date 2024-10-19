@@ -2,6 +2,7 @@ import codecs
 import re
 import tempfile
 from pathlib import Path
+import os
 
 import numpy as np
 import soundfile as sf
@@ -77,6 +78,7 @@ class TTSInference:
     
     def __init__(self, config_path="inference-cli.toml", model_name=None, ref_audio=None, ref_text="666", gen_text=None,
                  gen_file=None, output_dir=None, remove_silence=False, load_vocoder_from_local=False):
+        os.chdir(os.path.dirname(__file__))
         self.config = tomli.load(open(config_path, "rb"))
 
         self.ref_audio = ref_audio if ref_audio else self.config["ref_audio"]
@@ -393,13 +395,3 @@ class TTSInference:
         
         print(f"Generating audio using {self.model_name} in {len(gen_text_batches)} batches, loading models...")
         return self.infer_batch((audio, sr), self.ref_text, gen_text_batches, self.model_name, self.remove_silence, cross_fade_duration)
-
-
-# Example usage
-if __name__ == "__main__":
-    tts_inference = TTSInference(
-        ref_audio="samples/RodSerling.wav", 
-        ref_text="", 
-        gen_text="Imagine a world where you can do anything you want. A world where you can be anyone you want to be. A world where you can go anywhere you want to go. A world where you can see anything you want to see. A world where you can feel anything you want to feel. A world where you can experience anything you want to experience. A world where you can create anything you want to create. A world where you can dream anything you want to dream. A world where you can live any life you want to live. A world where you can be free. A world where you can be happy. A world where you can be yourself. A world without limits.",
-        output_dir="/dev/shm/")
-    tts_inference.infer()
