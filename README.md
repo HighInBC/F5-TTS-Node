@@ -7,4 +7,3 @@ This code is in a barely working state. It is cobbled together from AI generated
 * Install requirements.txt into ComfyUI's environment
 * Install ffmpeg
 * Update the ffmpeg_path variable in F5TTSNode.py to match the location of your ffmpeg
-* You may also have to replace the references to /dev/shm/ if you are using windows, any temp folder will do

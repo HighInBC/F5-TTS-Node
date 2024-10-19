@@ -3,6 +3,7 @@ import sys
 import subprocess
 import re
 import torch
+import tempfile
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -41,15 +42,16 @@ class F5TTSNode:
     CATEGORY = "Audio Generation"
 
     def execute(self, sample_input, text):
+        tempPath = tempfile.gettempdir()
         sample_path = os.path.join(self.data_path, "samples", sample_input)
         tts_inference = TTSInference(
             ref_audio=sample_path, 
             ref_text="", 
             gen_text=text,
-            output_dir="/dev/shm/")
+            output_dir=tempPath)
         tts_inference.infer()
 
-        return (get_audio("/dev/shm/out.wav", start_time=0),)
+        return (get_audio(os.path.join(tempPath, "out.wav"), start_time=0),)
 
 NODE_CLASS_MAPPINGS = {
     "F5TTSNode": F5TTSNode
